@@ -12,6 +12,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 232, 228, 228),
       body: Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,6 +89,40 @@ class _HomeState extends State<Home> {
               child: Text(
                 "The Most Relevant",
                 style: AppWidget.headerTextStyle(20),
+              ),
+            ),
+            SizedBox(height: 20),
+            Container(
+              height: 300,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(30)),
+                    margin: EdgeInsets.only(left: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(30),
+                          child: Image.asset(
+                            "images/hotel1.jpg",
+                            width: MediaQuery.of(context).size.width / 1.2,
+                            fit: BoxFit.cover, // optional but recommended
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Hotel Beach",
+                            style: AppWidget.headerTextStyle(20),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
