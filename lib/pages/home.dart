@@ -93,12 +93,15 @@ class _HomeState extends State<Home> {
             ),
             SizedBox(height: 20),
             Container(
-              height: 300,
+              height: 350,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
                   Container(
-                    decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(30)),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                     margin: EdgeInsets.only(left: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,18 +110,40 @@ class _HomeState extends State<Home> {
                           borderRadius: BorderRadius.circular(30),
                           child: Image.asset(
                             "images/hotel1.jpg",
-                            width: MediaQuery.of(context).size.width / 1.2,
+                            width: MediaQuery.of(context).size.width/1.2,
                             fit: BoxFit.cover, // optional but recommended
                           ),
                         ),
                         SizedBox(height: 20),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "Hotel Beach",
-                            style: AppWidget.headerTextStyle(20),
+                          padding: const EdgeInsets.only(left: 15),
+                          child: Row(
+                            children: [
+                              Text(
+                                "Hotel Beach",
+                                style: AppWidget.headerTextStyle(20),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width / 3,
+                              ),
+                              Text(
+                                "\$20",
+                                style: AppWidget.headerTextStyle(25),
+                              ),
+                            ],
                           ),
                         ),
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: Row(
+                            children: [
+                              Icon(Icons.location_on,color: Colors.blueAccent,size: 30,),
+                              SizedBox(width: 5,),
+                              Text("Near Bashundhara,Dhaka",style: AppWidget.normalTextStyle(16),)
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ),
