@@ -129,7 +129,7 @@ class _HomeState extends State<Home> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      "Hotel Beach",
+                                      "5 Star Hotel",
                                       style: AppWidget.headerTextStyle(20),
                                     ),
                                     SizedBox(
@@ -137,8 +137,8 @@ class _HomeState extends State<Home> {
                                           MediaQuery.of(context).size.width / 3,
                                     ),
                                     Text(
-                                      "\$20",
-                                      style: AppWidget.headerTextStyle(25),
+                                      "\$200",
+                                      style: AppWidget.headerTextStyle(20),
                                     ),
                                   ],
                                 ),
@@ -194,7 +194,7 @@ class _HomeState extends State<Home> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      "Hotel Beach",
+                                      "3 Star Hotel",
                                       style: AppWidget.headerTextStyle(20),
                                     ),
                                     SizedBox(
@@ -202,8 +202,8 @@ class _HomeState extends State<Home> {
                                           MediaQuery.of(context).size.width / 3,
                                     ),
                                     Text(
-                                      "\$20",
-                                      style: AppWidget.headerTextStyle(25),
+                                      "\$100",
+                                      style: AppWidget.headerTextStyle(20),
                                     ),
                                   ],
                                 ),
@@ -259,16 +259,16 @@ class _HomeState extends State<Home> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      "Hotel Beach",
+                                      "Near Beach Resort",
                                       style: AppWidget.headerTextStyle(20),
                                     ),
                                     SizedBox(
                                       width:
-                                          MediaQuery.of(context).size.width / 3,
+                                          MediaQuery.of(context).size.width / 5.5,
                                     ),
                                     Text(
-                                      "\$20",
-                                      style: AppWidget.headerTextStyle(25),
+                                      "\$200",
+                                      style: AppWidget.headerTextStyle(20),
                                     ),
                                   ],
                                 ),
@@ -285,7 +285,7 @@ class _HomeState extends State<Home> {
                                     ),
                                     SizedBox(width: 5),
                                     Text(
-                                      "Near Saint Martin,Dhaka",
+                                      "Near Saint Martin Island",
                                       style: AppWidget.normalTextStyle(16),
                                     ),
                                   ],
@@ -320,7 +320,7 @@ class _HomeState extends State<Home> {
                         elevation: 5,
                         borderRadius: BorderRadius.circular(30),
                         child: Container(
-                          margin: EdgeInsets.only(bottom: 10),
+                          margin: EdgeInsets.only(bottom: 5),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             color: Colors.white,
@@ -347,7 +347,6 @@ class _HomeState extends State<Home> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 5.0),
-
                                 child: Row(
                                   children: [
                                     Icon(Icons.home, color: Colors.blue),
