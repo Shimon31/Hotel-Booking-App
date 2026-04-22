@@ -32,6 +32,7 @@ class _DetailPagesState extends State<DetailPages> {
                 GestureDetector(onTap: (){
                   Navigator.pop(context);
                 },
+
                   child: Container(
                     padding: EdgeInsets.all(5),
                     margin: EdgeInsets.only(top: 50, left: 20),
