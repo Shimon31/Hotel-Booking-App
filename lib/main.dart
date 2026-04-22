@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/pages/detail_pages.dart';
 import 'package:hotel_booking/pages/home.dart';
+import 'package:hotel_booking/pages/signup.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
 
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: DetailPages(),
+      home: Signup(),
     );
   }
 }
