@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/pages/login.dart';
 import 'package:hotel_booking/services/widget_support.dart';
@@ -10,6 +11,43 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
+  String email = "", password = "", name = "";
+
+  TextEditingController nameET = TextEditingController();
+  TextEditingController emailET = TextEditingController();
+  TextEditingController passET = TextEditingController();
+
+  void registration() async {
+    if (passET != null && nameET != "" && emailET != "") {
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(email: email, password: password);
+      } on FirebaseAuthException catch (e) {
+        if (e.code == "weak-password") {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.orangeAccent,
+              content: Text(
+                "Provided Password is too Weak",
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+          );
+        } else if (e.code == "email-already-in-use") {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.orangeAccent,
+              content: Text(
+                "Account Already Exits",
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+          );
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

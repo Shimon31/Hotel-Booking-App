@@ -1,11 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_booking/pages/bottom_nav_bar.dart';
 import 'package:hotel_booking/pages/detail_pages.dart';
 import 'package:hotel_booking/pages/home.dart';
 import 'package:hotel_booking/pages/login.dart';
 import 'package:hotel_booking/pages/signup.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -21,7 +25,7 @@ class MyApp extends StatelessWidget {
 
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: Login(),
+      home: BottomNavBar(),
     );
   }
 }
