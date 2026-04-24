@@ -1,7 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_booking/pages/bottom_nav_bar.dart';
 import 'package:hotel_booking/pages/login.dart';
+import 'package:hotel_booking/services/database.dart';
 import 'package:hotel_booking/services/widget_support.dart';
+import 'package:hotel_booking/shared_preference.dart';
+import 'package:random_string/random_string.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -22,6 +27,28 @@ class _SignupState extends State<Signup> {
       try {
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
+
+        String id = randomAlphaNumeric(10);
+        Map<String, dynamic> userInfoMap = {
+          "Name": nameET.text,
+          "Email": emailET.text,
+          "Id": id,
+        };
+        await SharedPreferenceHelper().saveUserName(nameET.text);
+        await SharedPreferenceHelper().saveUserEmail(emailET.text);
+        await SharedPreferenceHelper().saveUserId(id);
+        await DatabaseMethods().addUserInfo(userInfoMap, id);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            content: Text(
+              "Registered Successfully",
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+
+        );
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>BottomNavBar()));
       } on FirebaseAuthException catch (e) {
         if (e.code == "weak-password") {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -85,6 +112,7 @@ class _SignupState extends State<Signup> {
                   ),
                   child: Center(
                     child: TextField(
+                      controller: nameET,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Enter Name",
@@ -111,6 +139,7 @@ class _SignupState extends State<Signup> {
                   ),
                   child: Center(
                     child: TextField(
+                      controller: emailET,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Enter Email",
@@ -137,6 +166,8 @@ class _SignupState extends State<Signup> {
                   ),
                   child: Center(
                     child: TextField(
+                      obscureText: true,
+                      controller: passET,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Enter Password",
@@ -148,18 +179,29 @@ class _SignupState extends State<Signup> {
 
                 SizedBox(height: 25),
 
-                Center(
-                  child: Container(
-                    height: 50,
-                    width: MediaQuery.of(context).size.width / 2.5,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.green,
-                    ),
-                    child: Text(
-                      "Register",
-                      style: AppWidget.whiteTextStyle(20),
+                GestureDetector(
+                  onTap: (){
+                    if(nameET.text !="" && emailET.text!= "" && passET !=""){
+                      setState(() {
+                        email = emailET.text;
+                        password = passET.text;
+                      });
+                    }
+                    registration();
+                  },
+                  child: Center(
+                    child: Container(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width / 2.5,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.green,
+                      ),
+                      child: Text(
+                        "Register",
+                        style: AppWidget.whiteTextStyle(20),
+                      ),
                     ),
                   ),
                 ),

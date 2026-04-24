@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_booking/pages/bottom_nav_bar.dart';
 import 'package:hotel_booking/pages/signup.dart';
 
 import '../services/widget_support.dart';
@@ -11,6 +13,45 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  String email = "",
+      password = "";
+
+  TextEditingController nameET = TextEditingController();
+  TextEditingController emailET = TextEditingController();
+  TextEditingController passET = TextEditingController();
+
+  void login() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> BottomNavBar()));
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "user-not-found") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.orangeAccent,
+            content: Text(
+              "No User Found For this email",
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+        );
+      } else if (e.code == "wrong-password") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.orangeAccent,
+            content: Text(
+              "Incorrect Password",
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +88,7 @@ class _LoginState extends State<Login> {
                   ),
                   child: Center(
                     child: TextField(
+                      controller: emailET,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Enter Email",
@@ -73,6 +115,8 @@ class _LoginState extends State<Login> {
                   ),
                   child: Center(
                     child: TextField(
+                      obscureText: true,
+                      controller: passET,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Enter Password",
@@ -97,16 +141,30 @@ class _LoginState extends State<Login> {
 
                 SizedBox(height: 25),
 
-                Center(
-                  child: Container(
-                    height: 50,
-                    width: MediaQuery.of(context).size.width / 2.5,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.green,
+                GestureDetector(
+                  onTap: () {
+                    if (emailET.text != "" && passET.text != "") {
+                      setState(() {
+                        email = emailET.text;
+                        password = passET.text;
+                      });
+                    }
+                    login();
+                  },
+                  child: Center(
+                    child: Container(
+                      height: 50,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width / 2.5,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.green,
+                      ),
+                      child: Text("Login", style: AppWidget.whiteTextStyle(20)),
                     ),
-                    child: Text("Login", style: AppWidget.whiteTextStyle(20)),
                   ),
                 ),
                 SizedBox(height: 10),
@@ -119,8 +177,11 @@ class _LoginState extends State<Login> {
                     ),
                     SizedBox(width: 10),
                     GestureDetector(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> Signup()));
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Signup()),
+                        );
                       },
                       child: Text(
                         "Register",
