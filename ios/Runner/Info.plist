@@ -18,6 +18,12 @@
 	<string>hotel_booking</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>NSCameraUsageDescription</key>
+    <string>We require camera access to upload the images</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>We require Microphone access to connect to a call</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Allow access to photo library to upload the Image</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>

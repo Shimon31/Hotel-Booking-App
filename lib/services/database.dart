@@ -9,4 +9,12 @@ class DatabaseMethods{
         .set(userInfoMap);
 
   }
+  Future addHotelInfo(Map<String,dynamic> hotelInfoMap,String id) async{
+
+    return await FirebaseFirestore.instance
+        .collection("users")
+        .doc(id)
+        .set(hotelInfoMap);
+
+  }
 }
