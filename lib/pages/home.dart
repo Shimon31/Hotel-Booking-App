@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_booking/services/database.dart';
 import 'package:hotel_booking/services/widget_support.dart';
 
 class Home extends StatefulWidget {
@@ -9,7 +11,100 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Stream? hotelStream;
+
+  getontheload() async {
+    hotelStream = await DatabaseMethods().getAllHotels();
+    setState(() {});
+  }
+
   @override
+  void initState() {
+    super.initState();
+    getontheload();
+  }
+
+  Widget allHotels() {
+    return StreamBuilder(
+      stream: hotelStream,
+      builder: (context, AsyncSnapshot snapshot) {
+        return snapshot.hasData
+            ? ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: snapshot.data.docs.length,
+                itemBuilder: (context, index) {
+                  DocumentSnapshot ds = snapshot.data.docs[index];
+
+                  return Container(
+                    margin: EdgeInsets.only(left: 20, bottom: 5),
+                    child: Material(
+                      elevation: 3,
+                      borderRadius: BorderRadius.circular(30),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadiusGeometry.circular(30),
+                              child: Image.asset(
+                                "images/hotel1.jpg",
+                                width: MediaQuery.of(context).size.width ,
+                                fit: BoxFit.cover,
+                                height: 240,
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            Padding(
+                              padding: EdgeInsets.only(left: 20),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    ds["Hotel Name"],
+                                    style: AppWidget.headerTextStyle(20),
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width/5 ,
+                                  ),
+                                  Text(
+                                    "\$" + ds["Hotel Charges"],
+                                    style: AppWidget.headerTextStyle(25),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Padding(
+                              padding: EdgeInsets.only(left: 20),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.location_on,
+                                    color: Colors.blue,
+                                    size: 30,
+                                  ),
+                                  SizedBox(width: 10,),
+                                  Text(ds["Hotel Address"],style: AppWidget.normalTextStyle(16),)
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              )
+            : Container();
+      },
+    );
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 232, 228, 228),
@@ -98,206 +193,7 @@ class _HomeState extends State<Home> {
               SizedBox(height: 20),
               Container(
                 height: 350,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(left: 20, bottom: 5),
-                      child: Material(
-                        elevation: 3,
-                        borderRadius: BorderRadius.circular(30),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(30),
-                                child: Image.asset(
-                                  "images/hotel1.jpg",
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.2,
-                                  fit: BoxFit.cover, // optional but recommended
-                                ),
-                              ),
-                              SizedBox(height: 20),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 15),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "5 Star Hotel",
-                                      style: AppWidget.headerTextStyle(20),
-                                    ),
-                                    SizedBox(
-                                      width:
-                                          MediaQuery.of(context).size.width / 3,
-                                    ),
-                                    Text(
-                                      "\$200",
-                                      style: AppWidget.headerTextStyle(20),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.location_on,
-                                      color: Colors.blueAccent,
-                                      size: 30,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      "Near Bashundhara,Dhaka",
-                                      style: AppWidget.normalTextStyle(16),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 20, bottom: 5),
-                      child: Material(
-                        elevation: 3,
-                        borderRadius: BorderRadius.circular(30),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(30),
-                                child: Image.asset(
-                                  "images/hotel2.jpg",
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.2,
-                                  fit: BoxFit.cover, // optional but recommended
-                                ),
-                              ),
-                              SizedBox(height: 20),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 15),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "3 Star Hotel",
-                                      style: AppWidget.headerTextStyle(20),
-                                    ),
-                                    SizedBox(
-                                      width:
-                                          MediaQuery.of(context).size.width / 3,
-                                    ),
-                                    Text(
-                                      "\$100",
-                                      style: AppWidget.headerTextStyle(20),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.location_on,
-                                      color: Colors.blueAccent,
-                                      size: 30,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      "Near Gazipur,Dhaka",
-                                      style: AppWidget.normalTextStyle(16),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 20, bottom: 5),
-                      child: Material(
-                        elevation: 3,
-                        borderRadius: BorderRadius.circular(30),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(30),
-                                child: Image.asset(
-                                  "images/hotel3.jpg",
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.2,
-                                  fit: BoxFit.cover, // optional but recommended
-                                ),
-                              ),
-                              SizedBox(height: 20),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 15),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "Near Beach Resort",
-                                      style: AppWidget.headerTextStyle(20),
-                                    ),
-                                    SizedBox(
-                                      width:
-                                          MediaQuery.of(context).size.width / 5.5,
-                                    ),
-                                    Text(
-                                      "\$200",
-                                      style: AppWidget.headerTextStyle(20),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.location_on,
-                                      color: Colors.blueAccent,
-                                      size: 30,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      "Near Saint Martin Island",
-                                      style: AppWidget.normalTextStyle(16),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                child: allHotels(),
               ),
               SizedBox(height: 10),
               Padding(
