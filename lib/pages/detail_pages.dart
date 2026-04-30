@@ -2,13 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:hotel_booking/services/widget_support.dart';
 
 class DetailPages extends StatefulWidget {
-  const DetailPages({super.key});
+
+  String name, price, offer, wifi, hdtv, kitchen, bathroom, description;
+
+  DetailPages(
+      {super.key, required this.name, required this.price, required this.offer, required this.wifi, required this.hdtv, required this.kitchen, required this.bathroom, required this.description,});
+
 
   @override
   State<DetailPages> createState() => _DetailPagesState();
 }
 
 class _DetailPagesState extends State<DetailPages> {
+
+  DateTime? startDate;
+  DateTime? endDate;
+  int? daysDifference;
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,8 +31,14 @@ class _DetailPagesState extends State<DetailPages> {
               Stack(
                 children: [
                   Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 2.5,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height / 2.5,
                     child: ClipRRect(
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(30),
@@ -56,36 +73,41 @@ class _DetailPagesState extends State<DetailPages> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Near Beach", style: AppWidget.headerTextStyle(22)),
+                    Text(widget.name, style: AppWidget.headerTextStyle(22)),
                     SizedBox(height: 10),
-                    Text("\$20", style: AppWidget.normalTextStyle(22)),
+                    Text(widget.price, style: AppWidget.normalTextStyle(22)),
                     Divider(thickness: 2),
                     SizedBox(height: 10),
                     Text(
-                      "What this place offer",
+                     widget.offer,
                       style: AppWidget.headerTextStyle(22),
                     ),
                     Row(
                       children: [
                         Icon(Icons.wifi, color: Colors.blueAccent),
                         SizedBox(width: 10),
-                        Text("WiFI", style: AppWidget.normalTextStyle(22)),
+                        widget.wifi=="true"? Text("WiFI", style: AppWidget.normalTextStyle(22)):Container(),
                         SizedBox(width: 40),
                         Icon(Icons.tv, color: Colors.blueAccent),
                         SizedBox(width: 10),
-                        Text("HDTV", style: AppWidget.normalTextStyle(22)),
+                        widget.hdtv=="true"?Text("HDTV", style: AppWidget.normalTextStyle(22)):Container(),
                       ],
                     ),
                     SizedBox(height: 20),
                     Row(
                       children: [
-                        Icon(Icons.kitchen, color: Colors.blueAccent),
+
                         SizedBox(width: 10),
-                        Text("Kitchen", style: AppWidget.normalTextStyle(22)),
+                        widget.kitchen=="true"? Row(
+                          children: [
+                            Icon(Icons.kitchen, color: Colors.blueAccent),
+                            Text("Kitchen", style: AppWidget.normalTextStyle(22)),
+                          ],
+                        ):Container(),
                         SizedBox(width: 40),
                         Icon(Icons.bathroom, color: Colors.blueAccent),
                         SizedBox(width: 10),
-                        Text("Bathroom", style: AppWidget.normalTextStyle(22)),
+                        widget.bathroom=="true"?Text("Bathroom", style: AppWidget.normalTextStyle(22)):Container(),
                       ],
                     ),
 
@@ -97,7 +119,7 @@ class _DetailPagesState extends State<DetailPages> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      "Hotel Sea Crown – A beachfront hotel offering beautiful sea views and comfortable rooms.Perfect for tourists looking for a relaxing stay near the longest natural sea beach.",
+                      widget.description,
                       style: AppWidget.normalTextStyle(16),
                     ),
                     SizedBox(height: 20),
@@ -109,7 +131,10 @@ class _DetailPagesState extends State<DetailPages> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        width: MediaQuery.of(context).size.width,
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -184,19 +209,28 @@ class _DetailPagesState extends State<DetailPages> {
                                 color: Color(0xFFececf8),
                               ),
                               child: TextField(
-                                decoration: InputDecoration(border: InputBorder.none,hintText: "1",hintStyle: AppWidget.normalTextStyle(20)),
+                                decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "1",
+                                    hintStyle: AppWidget.normalTextStyle(20)),
                               ),
                             ),
 
                             SizedBox(height: 20,),
                             Container(
-                              width: MediaQuery.of(context).size.width,
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width,
                               height: 50,
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Colors.blue),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.blue),
                               child: Column(
-                                mainAxisAlignment:MainAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text("Book Now",style: AppWidget.whiteTextStyle(20),),
+                                  Text("Book Now",
+                                    style: AppWidget.whiteTextStyle(20),),
                                 ],
                               ),
                             )
