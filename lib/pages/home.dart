@@ -89,10 +89,10 @@ class _HomeState extends State<Home> {
                                 MediaQuery
                                     .of(context)
                                     .size
-                                    .width / 30,
+                                    .width / 4.5,
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 15),
+                                padding: const EdgeInsets.only(),
                                 child: Text(
                                   ds["Hotel Charges"],
                                   style: AppWidget.headerTextStyle(25),
