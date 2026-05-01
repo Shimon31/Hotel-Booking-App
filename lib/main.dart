@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/hotel_owner/hotel_detail_page.dart';
+import 'package:hotel_booking/pages/booking.dart';
 import 'package:hotel_booking/pages/bottom_nav_bar.dart';
 import 'package:hotel_booking/pages/detail_pages.dart';
 import 'package:hotel_booking/pages/home.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
 
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: BottomNavBar(),
+      home: Booking(),
     );
   }
 }

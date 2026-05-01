@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:hotel_booking/services/widget_support.dart';
 import 'package:intl/intl.dart';
 
@@ -90,8 +91,14 @@ class _DetailPagesState extends State<DetailPages> {
               Stack(
                 children: [
                   Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 2.5,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height / 2.5,
                     child: ClipRRect(
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(30),
@@ -128,7 +135,8 @@ class _DetailPagesState extends State<DetailPages> {
                   children: [
                     Text(widget.name, style: AppWidget.headerTextStyle(22)),
                     SizedBox(height: 10),
-                    Text("BDT "+widget.price, style: AppWidget.normalTextStyle(22)),
+                    Text("BDT " + widget.price,
+                        style: AppWidget.normalTextStyle(22)),
                     Divider(thickness: 2),
                     SizedBox(height: 10),
                     Text(
@@ -157,26 +165,26 @@ class _DetailPagesState extends State<DetailPages> {
                     SizedBox(height: 5),
                     widget.kitchen == "true"
                         ? Row(
-                            children: [
-                              Icon(Icons.kitchen, color: Colors.blueAccent),
-                              Text(
-                                "Kitchen",
-                                style: AppWidget.normalTextStyle(22),
-                              ),
-                            ],
-                          )
+                      children: [
+                        Icon(Icons.kitchen, color: Colors.blueAccent),
+                        Text(
+                          "Kitchen",
+                          style: AppWidget.normalTextStyle(22),
+                        ),
+                      ],
+                    )
                         : Container(),
                     SizedBox(height: 5),
                     widget.bathroom == "true"
                         ? Row(
-                            children: [
-                              Icon(Icons.bathroom, color: Colors.blueAccent),
-                              Text(
-                                "Bathroom",
-                                style: AppWidget.normalTextStyle(22),
-                              ),
-                            ],
-                          )
+                      children: [
+                        Icon(Icons.bathroom, color: Colors.blueAccent),
+                        Text(
+                          "Bathroom",
+                          style: AppWidget.normalTextStyle(22),
+                        ),
+                      ],
+                    )
                         : Container(),
                     Divider(thickness: 2),
                     SizedBox(height: 10),
@@ -198,12 +206,16 @@ class _DetailPagesState extends State<DetailPages> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        width: MediaQuery.of(context).size.width,
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "BDT " +finalAmount.toString() + " for"+daysDifference.toString()+ " Nights",
+                              "BDT " + finalAmount.toString() + " for" +
+                                  daysDifference.toString() + " Nights",
                               style: AppWidget.headerTextStyle(16),
                             ),
                             SizedBox(height: 10),
@@ -283,7 +295,7 @@ class _DetailPagesState extends State<DetailPages> {
                                 color: Color(0xFFececf8),
                               ),
                               child: TextField(
-                                onChanged: (value){
+                                onChanged: (value) {
                                   finalAmount = finalAmount * int.parse(value);
                                   setState(() {
 
@@ -300,7 +312,10 @@ class _DetailPagesState extends State<DetailPages> {
 
                             SizedBox(height: 20),
                             Container(
-                              width: MediaQuery.of(context).size.width,
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width,
                               height: 50,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
@@ -330,4 +345,20 @@ class _DetailPagesState extends State<DetailPages> {
       ),
     );
   }
+
+  // Future<void> makePayment(String amount) async {
+  //   try {
+  //     paymentIntent = await createPaymentIntent(amount, 'AED');
+  //     await Stripe.instance
+  //         .initPaymentSheet(paymentSheetParameters: SetupPaymentSheetParameters(
+  //         paymentIntentClientSecret: paymentIntent?['client_secret_key'],
+  //         style: ThemeMode.dark,
+  //         merchantDisplayName: 'Shimon'))
+  //         .then((value) {});
+  //     displayPaymentSheet(amount);
+  //   }catch(e,s){
+  //
+  //   }
+  // }
+
 }
