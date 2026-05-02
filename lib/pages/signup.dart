@@ -23,7 +23,7 @@ class _SignupState extends State<Signup> {
   TextEditingController passET = TextEditingController();
 
   void registration() async {
-    if (passET != null && nameET != "" && emailET != "") {
+    if (passET.text != "" && nameET.text != "" && emailET.text != ""){
       try {
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
