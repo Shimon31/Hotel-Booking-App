@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
 
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: Booking(),
+      home: Login(),
     );
   }
 }
