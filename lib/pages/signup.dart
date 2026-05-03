@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_booking/hotel_owner/hotel_detail_page.dart';
 import 'package:hotel_booking/pages/bottom_nav_bar.dart';
 import 'package:hotel_booking/pages/login.dart';
 import 'package:hotel_booking/services/database.dart';
@@ -16,57 +17,152 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-  String email = "", password = "", name = "";
+  String selectedRole = "user";
+
+  String email = "",
+      password = "",
+      name = "";
 
   TextEditingController nameET = TextEditingController();
   TextEditingController emailET = TextEditingController();
   TextEditingController passET = TextEditingController();
 
-  void registration() async {
-    if (passET.text != "" && nameET.text != "" && emailET.text != ""){
+  void registerUser() async {
+    if (nameET.text.isEmpty || emailET.text.isEmpty || passET.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Please fill all fields",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          backgroundColor: Colors.yellow,
+        ),
+      );
+      return;
+    }
+
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+        email: emailET.text,
+        password: passET.text,
+      );
+
+      String id = userCredential.user!.uid;
+      Map<String, dynamic> userInfoMap = {
+        "Name": nameET.text,
+        "Email": emailET.text,
+        "Id": id,
+        "role": selectedRole,
+      };
+
+      await DatabaseMethods().addUserInfo(userInfoMap, id);
+
+      SharedPreferenceHelper helper = SharedPreferenceHelper();
+      await helper.saveUserId(id);
+      await helper.saveUserName(nameET.text);
+      await helper.saveUserEmail(emailET.text);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Registered as $selectedRole,",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      if (selectedRole == "admin") {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => HotelDetailPage()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => BottomNavBar()),
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "email-already-in-use") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Email already exists",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  void adminRegistration() async {
+    if (nameET.text != "" && emailET.text != "" && passET.text != "") {
       try {
         UserCredential userCredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: email, password: password);
+            .createUserWithEmailAndPassword(
+          email: emailET.text,
+          password: passET.text,
+        );
 
-        String id = randomAlphaNumeric(10);
-        Map<String, dynamic> userInfoMap = {
+        String id = userCredential.user!.uid;
+
+        Map<String, dynamic> adminMap = {
           "Name": nameET.text,
           "Email": emailET.text,
           "Id": id,
+          "role": "admin",
         };
-        await SharedPreferenceHelper().saveUserName(nameET.text);
-        await SharedPreferenceHelper().saveUserEmail(emailET.text);
-        await SharedPreferenceHelper().saveUserId(id);
-        await DatabaseMethods().addUserInfo(userInfoMap, id);
+
+        await DatabaseMethods().addUserInfo(adminMap, id);
+        SharedPreferenceHelper helper = SharedPreferenceHelper();
+        await helper.saveUserId(id);
+        await helper.saveUserName(nameET.text);
+        await helper.saveUserEmail(emailET.text);
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            backgroundColor: Colors.green,
             content: Text(
-              "Registered Successfully",
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-
-        );
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>BottomNavBar()));
-      } on FirebaseAuthException catch (e) {
-        if (e.code == "weak-password") {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.orangeAccent,
-              content: Text(
-                "Provided Password is too Weak",
-                style: TextStyle(fontSize: 16),
+              "Admin Created Successfully",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          );
-        } else if (e.code == "email-already-in-use") {
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => HotelDetailPage()),
+        );
+      } on FirebaseAuthException catch (e) {
+        if (e.code == "email-already-in-use") {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.orangeAccent,
               content: Text(
-                "Account Already Exits",
-                style: TextStyle(fontSize: 16),
+                  "Account Already Exits",
+                  style: TextStyle(color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold) ,
               ),
             ),
           );
@@ -171,28 +267,66 @@ class _SignupState extends State<Signup> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Enter Password",
-                        prefixIcon: Icon(Icons.email, color: Colors.blue),
+                        prefixIcon: Icon(Icons.key, color: Colors.blue),
                       ),
                     ),
                   ),
                 ),
 
                 SizedBox(height: 25),
-
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        Radio(
+                          value: "user",
+                          groupValue: selectedRole,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedRole = value.toString();
+                            });
+                          },
+                        ),
+                        Text("User"),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Radio(
+                          value: "admin",
+                          groupValue: selectedRole,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedRole = value.toString();
+                            });
+                          },
+                        ),
+                        Text("Admin"),
+                      ],
+                    ),
+                  ],
+                ),
                 GestureDetector(
-                  onTap: (){
-                    if(nameET.text !="" && emailET.text!= "" && passET !=""){
-                      setState(() {
-                        email = emailET.text;
-                        password = passET.text;
-                      });
+                  onTap: () {
+                    if (nameET.text != "" &&
+                        emailET.text != "" &&
+                        passET.text != "") {
+                      if (selectedRole == "admin") {
+                        adminRegistration();
+                      } else {
+                        registerUser();
+                      }
                     }
-                    registration();
                   },
+
                   child: Center(
                     child: Container(
                       height: 50,
-                      width: MediaQuery.of(context).size.width / 2.5,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width / 2.5,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),

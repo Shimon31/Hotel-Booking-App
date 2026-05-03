@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_booking/hotel_owner/hotel_detail_page.dart';
 import 'package:hotel_booking/pages/bottom_nav_bar.dart';
 import 'package:hotel_booking/pages/signup.dart';
 
+import '../services/database.dart';
 import '../services/widget_support.dart';
+import '../shared_preference.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -21,36 +24,58 @@ class _LoginState extends State<Login> {
   TextEditingController passET = TextEditingController();
 
   void login() async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
+    if (emailET.text.isEmpty || passET.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Enter email & password",style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),),
+          backgroundColor: Colors.yellow,),
       );
-      Navigator.push(context, MaterialPageRoute(builder: (context)=> BottomNavBar()));
-    } on FirebaseAuthException catch (e) {
-      if (e.code == "user-not-found") {
+      return;
+    }
+
+    try {
+      UserCredential userCredential =
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailET.text,
+        password: passET.text,
+      );
+
+      String uid = userCredential.user!.uid;
+      var userData = await DatabaseMethods().getUserById(uid);
+
+      if (userData == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            backgroundColor: Colors.orangeAccent,
-            content: Text(
-              "No User Found For this email",
-              style: TextStyle(fontSize: 16),
-            ),
-          ),
+            content: Text("User data not found",style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),), backgroundColor: Colors.red,),
         );
-      } else if (e.code == "wrong-password") {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.orangeAccent,
-            content: Text(
-              "Incorrect Password",
-              style: TextStyle(fontSize: 16),
-            ),
-          ),
-        );
+        return;
       }
+
+
+      SharedPreferenceHelper helper = SharedPreferenceHelper();
+      await helper.saveUserId(uid);
+      await helper.saveUserName(userData["Name"]); // must match Firestore field
+      await helper.saveUserEmail(
+          userData["Email"]); // must match Firestore field
+
+      if (userData["role"] == "admin") {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Login As Admin",style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),), backgroundColor: Colors.green,));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => HotelDetailPage()));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Login As User",style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),), backgroundColor: Colors.green,));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => BottomNavBar()));
+      }
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message ?? "Login failed"),
+          backgroundColor: Colors.red,),
+      );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +145,7 @@ class _LoginState extends State<Login> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Enter Password",
-                        prefixIcon: Icon(Icons.email, color: Colors.blue),
+                        prefixIcon: Icon(Icons.key, color: Colors.blue),
                       ),
                     ),
                   ),

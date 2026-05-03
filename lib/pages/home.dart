@@ -38,92 +38,101 @@ class _HomeState extends State<Home> {
             DocumentSnapshot ds = snapshot.data.docs[index];
 
             return GestureDetector(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                    DetailPages(name: ds["Hotel Name"],
-                        price: ds["Hotel Charges"],
-                        offer: ds["Hotel Name"],
-                        wifi: ds["WiFi"],
-                        hdtv: ds["HDTV"],
-                        kitchen: ds["Kitchen"],
-                        bathroom: ds["Bathroom"],
-                        description: ds["Hotel Description"])));
-              },
-              child: Container(
-                margin: EdgeInsets.only(left: 20, bottom: 5),
-                child: Material(
-                  elevation: 3,
-                  borderRadius: BorderRadius.circular(30),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadiusGeometry.circular(30),
-                          child: Image.asset(
-                            "images/hotel1.jpg",
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width / 1.2,
-                            fit: BoxFit.cover,
-                            height: 240,
+                onTap: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) =>
+                      DetailPages(name: ds["Hotel Name"],
+                          price: ds["Hotel Charges"],
+                          offer: ds["Hotel Name"],
+                          wifi: ds["WiFi"],
+                          hdtv: ds["HDTV"],
+                          kitchen: ds["Kitchen"],
+                          bathroom: ds["Bathroom"],
+                          description: ds["Hotel Description"])));
+                },
+                child: Container(
+                  margin: EdgeInsets.only(left: 20, bottom: 5),
+                  child: Material(
+                    elevation: 3,
+                    borderRadius: BorderRadius.circular(30),
+                    child: Container(
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width / 1.2, // fix card width
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30),
+                            ),
+                            child: Image.asset(
+                              "images/hotel1.jpg",
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width / 1.2, // match card width
+                              fit: BoxFit.cover,
+                              height: 240,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 20),
-                        Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Row(
-                            children: [
-                              Text(
-                                ds["Hotel Name"],
-                                style: AppWidget.headerTextStyle(20),
-                              ),
-                              SizedBox(
-                                width:
-                                MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width / 4.5,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(),
-                                child: Text(
-                                  ds["Hotel Charges"],
-                                  style: AppWidget.headerTextStyle(25),
+                          SizedBox(height: 20),
+                          Padding(
+                            padding: EdgeInsets.only(left: 20, right: 20),
+                            // right padding added
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              // name left, price right
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    ds["Hotel Name"],
+                                    style: AppWidget.headerTextStyle(20),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
                                 ),
-                              ),
-                            ],
+                                SizedBox(width: 10),
+                                Text(
+                                  ds["Hotel Charges"],
+                                  style: AppWidget.headerTextStyle(18),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.location_on,
-                                color: Colors.blue,
-                                size: 30,
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                ds["Hotel Address"],
-                                style: AppWidget.normalTextStyle(16),
-                              ),
-                            ],
+                          SizedBox(height: 10),
+                          Padding(
+                            padding: EdgeInsets.only(left: 20, bottom: 15),
+                            // bottom padding added
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on,
+                                  color: Colors.blue,
+                                  size: 30,
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  ds["Hotel Address"],
+                                  style: AppWidget.normalTextStyle(16),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ),
-              ),
+                  )
+                  ,
+                )
+                ,
+
             );
           },
         )

@@ -1,24 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class DatabaseMethods{
-  Future addUserInfo(Map<String,dynamic> userInfoMap,String id) async{
-
+class DatabaseMethods {
+  Future addUserInfo(Map<String, dynamic> userInfoMap, String id) async {
     return await FirebaseFirestore.instance
         .collection("users")
         .doc(id)
         .set(userInfoMap);
-
   }
-  Future addHotelInfo(Map<String,dynamic> hotelInfoMap,String id) async{
 
+  Future getUserById(String id) async {
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(id)
+        .get();
+
+    return doc.data();
+  }
+
+  Future addHotelInfo(Map<String, dynamic> hotelInfoMap, String id) async {
     return await FirebaseFirestore.instance
         .collection("Hotel")
         .doc(id)
         .set(hotelInfoMap);
-
   }
 
-  Future<Stream<QuerySnapshot>> getAllHotels() async{
+  Future<Stream<QuerySnapshot>> getAllHotels() async {
     return await FirebaseFirestore.instance.collection("Hotel").snapshots();
   }
 }
