@@ -65,15 +65,18 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(height: 20,),
                       selectedImage != null
-                          ? Container(
-                              height: 200,
-                              width: 200,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.file(
-                                  selectedImage!,
-                                  fit: BoxFit.cover,
+                          ? Center(
+                              child: Container(
+                                height: 200,
+                                width: 200,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Image.file(
+                                    selectedImage!,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             )
@@ -261,42 +264,52 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                       SizedBox(height: 20),
                       GestureDetector(
                         onTap: () async {
+                          if (selectedImage == null ||
+                              hotelNameController.text.isEmpty ||
+                              hotelChargeController.text.isEmpty ||
+                              hotelAddressController.text.isEmpty ||
+                              hotelDescriptionController.text.isEmpty) {
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text(
+                                  "Please fill all fields and select an image",
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            );
+
+                            return;
+                          }
+
                           String addId = randomAlphaNumeric(10);
-                          // Reference firebaseStorageRef = FirebaseStorage
-                          //     .instance
-                          //     .ref("blogImage")
-                          //     .child(addId);
-                          //
-                          // final UploadTask task = firebaseStorageRef.putFile(selectedImage!);
-                          // var downloadUrl = await(await task).ref.getDownloadURL();
+
                           Map<String, dynamic> addHotel = {
                             "image": "",
                             "Hotel Name": hotelNameController.text,
                             "Hotel Charges": hotelChargeController.text,
                             "Hotel Address": hotelAddressController.text,
-                            "Hotel Description":
-                                hotelDescriptionController.text,
+                            "Hotel Description": hotelDescriptionController.text,
                             "WiFi": isChecked1 ? "true" : "false",
                             "HDTV": isChecked2 ? "true" : "false",
                             "Kitchen": isChecked3 ? "true" : "false",
                             "Bathroom": isChecked4 ? "true" : "false",
                             "id": addId,
                           };
+
                           await DatabaseMethods().addHotelInfo(addHotel, addId);
+
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               backgroundColor: Colors.green,
-                              content: Text(
-                                "Hotel Details Has been Uploaded Successfully",
-                                style: TextStyle(fontSize: 16),
-                              ),
+                              content: Text("Hotel Uploaded Successfully"),
                             ),
                           );
+
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => OwnerHome(),
-                            ),
+                            MaterialPageRoute(builder: (context) => OwnerHome()),
                           );
                         },
                         child: Center(
